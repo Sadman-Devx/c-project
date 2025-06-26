@@ -9,12 +9,31 @@ struct user{
     char username[50];
     char phone[50];
 };
+
+void takeuserName()
+{
+
+}
 int main(){
     int choice;
-    printf("Welcome to Even Mangment System\n"); 
-    printf("1.Register");
+    printf("\t \t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n"); 
+    printf("Main Menu");
+    printf("\n1.Register");
     printf("\n2.Login");
     printf("\n3.Exict");
+
+
+    printf("\nEnter your choice: ");
+    scanf("%d",&choice);
+    fgetc(stdin);
+
+    switch(choice){
+        case 1:
+            takeuserName();
+            break;
+
+    }
+
 
 
 }

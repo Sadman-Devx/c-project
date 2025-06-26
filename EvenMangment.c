@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<conio.h>
 #define ENTER 13
 #define TAB 9
 #define BCKSPC 8
@@ -26,7 +27,7 @@ void takepassword(char pwd[50])
     char ch;
     while (1)
     {
-        ch = getchar(); // Use getch() to read a character without echoing it
+        ch = getch(); // Use getch() to read a character without echoing it
 
         if(ch == ENTER || ch == TAB){
             pwd[i] = '\0';
@@ -44,8 +45,8 @@ void takepassword(char pwd[50])
             printf("*");
         }
     }
-    
-} 
+
+}
 void generateusername(char *username, char *email)
 {
     int i, j = 0;
@@ -59,7 +60,7 @@ int main()
 {
     int choice;
     struct user user;
-    printf("\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n"); 
+    printf("\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n");
     printf("Main Menu");
     printf("\n1.Register");
     printf("\n2.Login");
@@ -81,7 +82,7 @@ int main()
         printf("Enter your password:\t");
         takepassword(user.password);
         break;
-        
+
 
     }
 }

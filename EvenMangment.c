@@ -29,7 +29,12 @@ int main(){
 
     switch(choice){
         case 1:
-            takeuserName();
+            printf("Enter your full name: ");
+            takeinput(user.fullName);
+            printf("Enter your Emaill: ");
+            takeinput(user.email);
+            printf("Enter your contact: ");
+            takeinput(user.phone);
             break;
 
     }

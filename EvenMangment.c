@@ -14,8 +14,17 @@ void takeinput(char *str){
     str[strcspn(str, "\n")] = 0; // Remove trailing newline character
 }
 
+void generateusername(char *username, char *emai)
+{
+    int i, j = 0;
+    for(i = 0; emai[i] != '@'; i++) {
+        username[j++] = emai[i];
+    }
+    username[j] = '\0';
+}
 
-int main(){
+int main()
+{
     int choice;
     struct user user;
     printf("\t \t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n"); 
@@ -26,11 +35,11 @@ int main(){
 
 
     printf("\nEnter your choice: ");
-scanf("%d",&choice);
-fgetc(stdin);
+    scanf("%d",&choice);
+    fgetc(stdin);
 
-switch(choice){
-    case 1:
+    switch(choice){
+        case 1:
         printf("Enter your full name: ");
         takeinput(user.fullName);
         printf("Enter your Email: ");
@@ -38,9 +47,7 @@ switch(choice){
         printf("Enter your contact: ");
         takeinput(user.phone);
         break;
+        
 
-}
-
-
-
+    }
 }

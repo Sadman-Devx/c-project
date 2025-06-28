@@ -15,6 +15,9 @@ struct user
     char username[50];
     char phone[50];
 };
+
+FILE *file;
+
 void takeinput(char *str)
 {
     fgets(str, 50, stdin);
@@ -61,6 +64,7 @@ char generateusername(char *username, char *email)
     username[j] = '\0';
 }
 
+
 int main()
 {
     int choice;
@@ -90,12 +94,23 @@ int main()
         takepassword(user.password);
         printf("\nConfirm password\t");
         takepassword(password2);
-
+        
         if(!strcmp(user.password,password2))
         {
             generateusername(user.username,user.email);
             printf("\nPassword matched");
-            printf("\nyour user name is %s",user.username);
+            file = fopen("users.data", "a");
+                fwrite(&user, sizeof(struct user), 1, file);
+                if (fwrite!=0)
+                {
+                    printf("\nUser registered successfully!");
+                    printf("\nYour user name is %s", user.username);
+                    fclose(file);
+                }
+                else
+                {
+                    printf("\nError in registering user.\n");
+                }
 
 
         }
@@ -111,7 +126,16 @@ int main()
             {
                 generateusername(user.username,user.email);
                 printf("\nPassword matched");
-                printf("\nyour user name is %s",user.username);
+                if (fwrite!=0)
+                {
+                    printf("\nUser registered successfully!");
+                    printf("\nYour user name is %s", user.username);
+                    fclose(file);
+                }
+                else
+                {
+                    printf("\nError in registering user.\n");
+                }
 
 
             }
@@ -122,7 +146,31 @@ int main()
 
         break;
 
+        //case 2:
+        //char usrname[50];
+        //char pass[50];
+        //struct user usr;
+        //printf("Enter your username:\t");
+        //takeinput(usrname);
+        //printf("Enter your password:\t");
+        //takepassword(pass);
 
-    }
+         //file = fopen("users.data", "r");
+         //while (fread(&usr, sizeof(struct user), 1, file)) {
+           // if (strcmp(usr.username, usrname) == 0 && strcmp(usr.password, pass) == 0) {
+             //   printf("\nLogin successful!\n");
+               // fclose(file);
+                //return 0; // Exit the program after successful login
+            //}
+            //else {
+              //  printf("\nInvalid username or password. Please try again.\n");
+            //}
+
+         }
+        
+            
+
+
+    
     
 }

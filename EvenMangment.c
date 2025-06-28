@@ -2,21 +2,21 @@
 #include<stdlib.h>
 #include<string.h>
 #include<conio.h>
+#include<windows.h>
 #define ENTER 13
 #define TAB 9
 #define BCKSPC 8
 
-
-
-
-struct user{
+struct user
+{
     char fullName[50];
     char email[50];
     char password[50];
     char username[50];
     char phone[50];
 };
-void takeinput(char *str){
+void takeinput(char *str)
+{
     fgets(str, 50, stdin);
     str[strcspn(str, "\n")] = 0; // Remove trailing newline character
 }
@@ -29,28 +29,33 @@ void takepassword(char pwd[50])
     {
         ch = getch(); // Use getch() to read a character without echoing it
 
-        if(ch == ENTER || ch == TAB){
+        if(ch == ENTER || ch == TAB)
+        {
             pwd[i] = '\0';
             break;
         }
-        else if(ch == BCKSPC){
-            if(i>0){
+        else if(ch == BCKSPC)
+        {
+            if(i>0)
+            {
                 i--;
                 printf("\b \b");
 
             }
         }
-        else{
+        else
+        {
             pwd[i++] = ch;
             printf("*");
         }
     }
 
 }
-void generateusername(char *username, char *email)
+char generateusername(char *username, char *email)
 {
     int i, j = 0;
-    for(i = 0; email[i] != '@'; i++) {
+    for(i = 0; email[i] != '@'; i++)
+    {
         username[j++] = email[i];
     }
     username[j] = '\0';
@@ -60,6 +65,7 @@ int main()
 {
     int choice;
     struct user user;
+    char password2[50];
     printf("\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n");
     printf("Main Menu");
     printf("\n1.Register");
@@ -71,18 +77,52 @@ int main()
     scanf("%d",&choice);
     fgetc(stdin);
 
-    switch(choice){
-        case 1:
+    switch(choice)
+    {
+    case 1:
         printf("Enter your full name:\t");
         takeinput(user.fullName);
         printf("Enter your Email:\t");
         takeinput(user.email);
         printf("Enter your contact:\t");
         takeinput(user.phone);
-        printf("Enter your password:\t");
+        printf("Enter your password\t");
         takepassword(user.password);
+        printf("\nConfirm password\t");
+        takepassword(password2);
+
+        if(!strcmp(user.password,password2))
+        {
+            generateusername(user.username,user.email);
+            printf("\nPassword matched");
+            printf("\nyour user name is %s",user.username);
+
+
+        }
+        else
+        {
+            printf("\nPassword do not matched\nPlease try again.");
+            Beep(600,200);
+            printf("\nEnter your password\t");
+            takepassword(user.password);
+            printf("\nConfirm password\t");
+            takepassword(password2);
+            if(!strcmp(user.password,password2))
+            {
+                generateusername(user.username,user.email);
+                printf("\nPassword matched");
+                printf("\nyour user name is %s",user.username);
+
+
+            }
+
+            break;
+
+        }
+
         break;
 
 
     }
+    
 }

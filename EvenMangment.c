@@ -70,7 +70,7 @@ int main()
     printf("Main Menu");
     printf("\n1.Register");
     printf("\n2.Login");
-    printf("\n3.Exit");
+    printf("\n3.Exit\n");
 
 
     printf("\nEnter your choice: ");

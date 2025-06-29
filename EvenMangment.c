@@ -54,7 +54,7 @@ void takepassword(char pwd[50])
     }
 
 }
-char generateusername(char *username, char *email)
+void generateusername(char *username, char *email)
 {
     int i, j = 0;
     for(i = 0; email[i] != '@'; i++)
@@ -68,112 +68,121 @@ char generateusername(char *username, char *email)
 int main()
 {
     int choice;
-    int usrFound =0;
+    int usrFound;
     struct user user;
     char password2[50];
-    printf("\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n");
-    printf("Main Menu");
-    printf("\n1.Register");
-    printf("\n2.Login");
-    printf("\n3.Exit\n");
+    char username[50],pass[50];
+    struct user usr;
 
-
-    printf("\nEnter your choice: ");
-    scanf("%d",&choice);
-    fgetc(stdin);
-
-    switch(choice)
+    do
     {
-    case 1:
-        printf("Enter your full name:\t");
-        takeinput(user.fullName);
-        printf("Enter your Email:\t");
-        takeinput(user.email);
-        printf("Enter your contact:\t");
-        takeinput(user.phone);
-        printf("Enter your password\t");
-        takepassword(user.password);
-        printf("\nConfirm password\t");
-        takepassword(password2);
-        
-        if(!strcmp(user.password,password2))
-        {
-            generateusername(user.username,user.email);
-            printf("\nPassword matched");
-            file = fopen("users.data", "a");
-                fwrite(&user, sizeof(struct user), 1, file);
-                if (fwrite!=0)
-                {
-                    printf("\nUser registered successfully!");
-                    printf("\nYour user name is %s", user.username);
-                    fclose(file);
-                }
-                else
-                {
-                    printf("\nError in registering user.\n");
-                }
+        printf("\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n");
+        printf("Main Menu");
+        printf("\n1.Register");
+        printf("\n2.Login");
+        printf("\n3.Exit\n");
 
 
-        }
-        else
+        printf("\nEnter your choice: ");
+        scanf("%d",&choice);
+        fgetc(stdin);
+
+        switch(choice)
         {
-            printf("\nPassword do not matched\nPlease try again.");
-            Beep(600,200);
-            printf("\nEnter your password\t");
-            takepassword(user.password);
-            printf("\nConfirm password\t");
-            takepassword(password2);
-            if(!strcmp(user.password,password2))
+        case 1:
+            printf("Enter your full name:\t");
+            takeinput(user.fullName);
+            printf("Enter your Email:\t");
+            takeinput(user.email);
+            printf("Enter your contact:\t");
+            takeinput(user.phone);
+            while (1)
             {
-                generateusername(user.username,user.email);
-                printf("\nPassword matched");
-                fwrite(&user, sizeof(struct user), 1, file);
-                if (fwrite!=0)
+                printf("Enter your password:\t");
+                takepassword(user.password);
+                printf("\nConfirm password:\t");
+                takepassword(password2);
+
+                if (!strcmp(user.password, password2))
                 {
-                    printf("\nUser registered successfully!");
-                    printf("\nYour user name is %s", user.username);
-                    fclose(file);
+                    generateusername(user.username, user.email);
+                    printf("\nPassword matched\n");
+
+                    file = fopen("users.data", "a");
+                    if (file != NULL)
+                    {
+                        if (fwrite(&user, sizeof(struct user), 1, file) == 1)
+                        {
+                            printf("User registered successfully!\n");
+                            printf("Your username is: %s\n", user.username);
+                        }
+                        else
+                        {
+                            printf("Error writing to file!\n");
+                        }
+                        fclose(file);
+                    }
+                    else
+                    {
+                        printf("Could not open file for writing!\n");
+                    }
+                    break;
                 }
                 else
                 {
-                    printf("\nError in registering user.\n");
+                    printf("\nPasswords do not match. Please try again.\n");
+                    Beep(600, 200);
                 }
-
-
             }
-
             break;
 
-        }
-
-       case 2:
-            char username[50],pass[50];
-            struct user usr;
-
-            printf("\nEnter your username\t");
+        case 2:
+            printf("\n\t\t\t-------- Login --------\n");
+            printf("Enter your username:\t");
             takeinput(username);
-            printf("\nEnter your password:\t");
-            takepassword(pass)
+            printf("Enter your password:\t");
+            takepassword(pass);
+            usrFound = 0;
 
-            file = fopen("users.data","r");
-            while (fread(&usr,sizeof(struct user),1,file)) {
-                if(!strcmp(usr.username,username)){
-                    if(!strcmp(usr.password,pass)){
-                        printf("\n\t\t\t\tWelcome %s",usr.fullName);
+            file = fopen("users.data", "r");
+            if (file != NULL)
+            {
+                while (fread(&usr, sizeof(struct user), 1, file))
+                {
+                    if (!strcmp(usr.username, username))
+                    {
+                        usrFound = 1;  // Moved here
+                        if (!strcmp(usr.password, pass))
+                        {
+                            printf("\nWelcome %s!\n", usr.fullName);
+                        }
+                        else
+                        {
+                            printf("\nInvalid password.\n");
+                            Beep(600, 200);
+                        }
+                        break;
                     }
                 }
-                else{
-                    printf("Invalid Password");
-                    beep(600,200)
+                fclose(file);
+
+                if (!usrFound)
+                {
+                    printf("\nUser not found!\n");
+                    Beep(600, 200);
                 }
-                usrFound = 1;
             }
-            if(!usrFound){
-                printf("\n\nUser is not registered!");
-                Beep(600,200);
-            }
-            fclose(file)
-            break;    
-             
+            break ;
+
+        case 3:
+            printf("Exiting...\n");
+            exit(0);
+
+        default:
+            printf("Invalid choice!\n");
+        }
+
     }
+    while(choice != 3);
+    return 0;
 }

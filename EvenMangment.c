@@ -76,7 +76,7 @@ int main()
 
     do
     {
-        printf("\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n");
+        printf("\n\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n");
         printf("Main Menu");
         printf("\n1.Register");
         printf("\n2.Login");
@@ -108,7 +108,7 @@ int main()
                     generateusername(user.username, user.email);
                     printf("\nPassword matched\n");
 
-                    file = fopen("users.data", "a");
+                    file = fopen("users.data", "ab");
                     if (file != NULL)
                     {
                         if (fwrite(&user, sizeof(struct user), 1, file) == 1)
@@ -138,13 +138,15 @@ int main()
 
         case 2:
             printf("\n\t\t\t-------- Login --------\n");
-            printf("Enter your username:\t");
+            printf("\nEnter your username:\t");
             takeinput(username);
             printf("Enter your password:\t");
             takepassword(pass);
             usrFound = 0;
 
-            file = fopen("users.data", "r");
+            system("cls"); // Clear the console for better user experience
+
+            file = fopen("users.data", "rb");
             if (file != NULL)
             {
                 while (fread(&usr, sizeof(struct user), 1, file))

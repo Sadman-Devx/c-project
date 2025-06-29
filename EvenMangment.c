@@ -68,6 +68,7 @@ char generateusername(char *username, char *email)
 int main()
 {
     int choice;
+    int usrFound =0;
     struct user user;
     char password2[50];
     printf("\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n");
@@ -145,31 +146,34 @@ int main()
 
         }
 
-        break;
+       case 2:
+            char username[50],pass[50];
+            struct user usr;
 
-        case 2:
-        char usrname[50], pass[50];
-        struct user usr;
-        printf("Enter your username:\t");
-        takeinput(usrname);
-        printf("Enter your password:\t");
-        takepassword(pass);
+            printf("\nEnter your username\t");
+            takeinput(username);
+            printf("\nEnter your password:\t");
+            takepassword(pass)
 
-        file = fopen("users.data", "r");
-        while (fread(&usr, sizeof(struct user), 1, file)) {
-            if (strcmp(usr.username, usrname) == 0 && strcmp(usr.password, pass) == 0) {
-                printf("\nLogin successful!\n");
-                fclose(file);
-                return 0; // Exit the program after successful login
+            file = fopen("users.data","r");
+            while (fread(&usr,sizeof(struct user),1,file)) {
+                if(!strcmp(usr.username,username)){
+                    if(!strcmp(usr.password,pass)){
+                        printf("\n\t\t\t\tWelcome %s",usr.fullName);
+                    }
+                }
+                else{
+                    printf("Invalid Password");
+                    beep(600,200)
+                }
+                usrFound = 1;
             }
-            else {
-                printf("\nInvalid username or password. Please try again.\n");
+            if(!usrFound){
+                printf("\n\nUser is not registered!");
+                Beep(600,200);
             }
-
-         }
-
-    
-        fclose(file);
-        break;  
+            fclose(file)
+            break;    
+             
     }
 }

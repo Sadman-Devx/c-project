@@ -16,6 +16,15 @@ struct user
     char phone[50];
 };
 
+struct admin
+{
+    char fullName[50];
+    char email[50];
+    char password[50];
+    char username[50];
+    char phone[50];
+};
+
 FILE *file;
 
 void takeinput(char *str)
@@ -67,27 +76,163 @@ void generateusername(char *username, char *email)
 
 int main()
 {
-    int choice;
+    //you can use both
+    //for user
+    int user_choice;
     int usrFound;
     struct user user;
     char password2[50];
     char username[50],pass[50];
     struct user usr;
+    //for admin
+    int admin_choice;
+    int admin_found;
+    struct admin admin;
+    struct admin admin_;
+    char admin_name[50],admin_pass[50],password1[50];
+    int choice;
+    printf("Select user type:\n");
+    printf("1. Admin\n");
+    printf("2. User\n");
+    printf("3. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d",&choice);
+    fgetc(stdin);
 
-    do
+    do{
+
+        switch(choice)
     {
+        case 1:
+
+        do{
+            printf("Admin Menu\n");
+            printf("1. Register\n");
+            printf("2. Login\n");
+            printf("3. Exit\n");
+
+            printf("Enter your choice: ");
+            scanf("%d",&admin_choice);
+            fgetc(stdin);
+
+            switch(admin_choice)
+            {
+                case 1:
+                printf("Enter your full name:\t");
+                takeinput(admin.fullName);
+                printf("Enter your emaill:\t");
+                takeinput(admin.email);
+                printf("Enter your contact:\t");
+                takeinput(admin.phone);
+                while (1)
+                {
+                    printf("Enter your password:\t");
+                    takepassword(admin.password);
+                    printf("\nConfirm your password:\t");
+                    takepassword(password1);
+
+                    if(!strcmp(admin.password,password1))
+                    {
+                        generateusername(admin.username,admin.email);
+                        printf("\nPassword matched\n");
+
+                        file = fopen("admin.data","ab");//admin data store file open
+                        if(file != NULL)
+                        {
+                            if(fwrite(&admin,sizeof(struct admin),1,file)==1)
+                            {
+                                printf("Admin registered successfully!\n");
+                                printf("user name is: %s\n",admin.username);
+                            }
+                            else
+                            {
+                                printf("Erron writing to file!\n");
+                            }
+                            fclose(file);
+                        }
+                        else
+                        {
+                            printf("could not open file for writing!\n");
+                        }
+                        break;//otherwise loop doesn't end.
+                    }
+                    else
+                    {
+                        printf("\nPassword do not match. Please try again.\n");
+                        Beep(600,200);
+                    }                    
+                }
+                break;
+
+                case 2:
+
+                printf("\n\t\t\t-------- Login --------\n");
+                printf("\nEnter your username:\t");
+                takeinput(username);
+                printf("Enter your password:\t");
+                takepassword(admin_pass);
+                admin_found = 0;
+
+                //system("cls"); // Clear the console for better user experience
+
+                file = fopen("admin.data", "rb");
+                if (file != NULL)
+                {
+                    while (fread(&admin, sizeof(struct admin), 1, file))
+                    {
+                        if (!strcmp(admin.username, username))
+                        {
+                            admin_found = 1;  // Moved here
+                            if (!strcmp(admin.password, admin_pass))
+                            {
+                                printf("\nWelcome %s!\n", admin.fullName);
+                            }
+                            else
+                            {
+                                printf("\nInvalid password.\n");
+                                Beep(600, 200);
+                            }
+                            break;
+                        }   
+                    }
+                    fclose(file);
+
+                    if (!admin_found)
+                    {
+                        printf("\nUser not found!\n");
+                        Beep(600, 200);
+                    }
+                }
+                break ;
+
+                case 3:
+                printf("Exiting....\n");
+                exit(0);
+                break;
+                
+                default:
+                printf("Invalid choice \n"); 
+            }
+
+        }while(admin_choice != 3);
+         break;
+
+        case 2:
+        
+
+        do
+        {
         printf("\n\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n");
         printf("Main Menu");
         printf("\n1.Register");
         printf("\n2.Login");
         printf("\n3.Exit\n");
 
-
         printf("\nEnter your choice: ");
-        scanf("%d",&choice);
+        scanf("%d",&user_choice);
         fgetc(stdin);
 
-        switch(choice)
+        switch(user_choice)
         {
         case 1:
             printf("Enter your full name:\t");
@@ -185,6 +330,16 @@ int main()
         }
 
     }
-    while(choice != 3);
+    while(user_choice != 3);
+        break;
+
+        case 3:
+        printf("Exiting......");
+        break;
+        default:
+        printf("Invalid choice");   
+    }
+    }while(choice != 3);
+
     return 0;
 }

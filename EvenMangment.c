@@ -24,8 +24,16 @@ struct admin
     char username[50];
     char phone[50];
 };
+struct event
+{
+    char eventName[50];
+    char eventDate[20];
+    char eventTime[10];
+    char eventLocation[100];
+};
 
 FILE *file;
+FILE *event;
 
 void takeinput(char *str)
 {
@@ -73,6 +81,67 @@ void generateusername(char *username, char *email)
     username[j] = '\0';
 }
 
+void booking_event()
+{
+    FILE *event = fopen("event.txt", "r");
+    if (event == NULL)
+    {
+        printf("No events found.\n");
+        return;
+    }
+
+    char line[256];
+    char events[20][256]; // Supports up to 20 events
+    int count = 0;
+    struct user user;
+    
+    printf("\n\t\t\t-------- Booking Event --------\n");
+    printf("\nPlease select an event to book:\n");
+
+
+    printf("Available Events:\n");
+    while (fgets(line, sizeof(line), event))
+    {
+        if (strstr(line, "Event Name:") != NULL)
+        {
+            strcpy(events[count], line);
+            printf("%d. %s", count + 1, line);
+            count++;
+        }
+    }
+    fclose(event);
+
+    if (count == 0)
+    {
+        printf("No events available for booking.\n");
+        return;
+    }
+
+    int choice;
+    printf("Enter the number of the event you want to book: ");
+    scanf("%d", &choice);
+    fgetc(stdin);
+
+    if (choice < 1 || choice > count)
+    {
+        printf("Invalid selection.\n");
+        return;
+    }
+
+    printf("You selected: %s\n", events[choice - 1]);
+    
+    printf("Enter your full name:\t");
+    takeinput(user.fullName);
+    printf("Enter your Email:\t");
+    takeinput(user.email);
+    printf("Enter your contact:\t");
+    takeinput(user.phone);
+    printf("Booking confirmed for event: %s\n", events[choice - 1]);
+    printf("Thank you for booking!\n");
+
+    // Here you can add booking logic, e.g., save booking info to a file
+}
+
 
 int main()
 {
@@ -91,6 +160,14 @@ int main()
     struct admin admin_;
     char admin_name[50],admin_pass[50],password1[50];
     int choice;
+
+    //
+    //for event
+    struct event ev;
+    char event_name[50], event_date[20], event_time[10], event_location[100];
+    int i;
+
+    //select option
     printf("Select user type:\n");
     printf("1. Admin\n");
     printf("2. User\n");
@@ -103,9 +180,11 @@ int main()
 
         switch(choice)
     {
-        case 1:
+        case 1://for admin
+        system("cls"); // Clear the console for better user experience 
 
         do{
+            printf("\n\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n");
             printf("Admin Menu\n");
             printf("1. Register\n");
             printf("2. Login\n");
@@ -117,8 +196,10 @@ int main()
 
             switch(admin_choice)
             {
-                case 1:
-                printf("Enter your full name:\t");
+                case 1://admin register
+                system("cls"); // Clear the console for better user experience 
+                printf("\n\t\t\t-------- Admin Registration --------\n");
+                printf("\nEnter your full name:\t");
                 takeinput(admin.fullName);
                 printf("Enter your emaill:\t");
                 takeinput(admin.email);
@@ -164,8 +245,8 @@ int main()
                 }
                 break;
 
-                case 2:
-
+                case 2://admin login
+                system("cls"); // Clear the console for better user experience
                 printf("\n\t\t\t-------- Login --------\n");
                 printf("\nEnter your username:\t");
                 takeinput(username);
@@ -173,7 +254,7 @@ int main()
                 takepassword(admin_pass);
                 admin_found = 0;
 
-                //system("cls"); // Clear the console for better user experience
+                system("cls"); // Clear the console for better user experience
 
                 file = fopen("admin.data", "rb");
                 if (file != NULL)
@@ -186,6 +267,67 @@ int main()
                             if (!strcmp(admin.password, admin_pass))
                             {
                                 printf("\nWelcome %s!\n", admin.fullName);
+                                // add event
+                                printf("1. Adding an event...\n");
+                                printf("2. View events\n");
+                                printf("3. Log out\n");
+                                printf("Enter your choice: ");
+                                int event_choice;
+                                scanf("%d", &event_choice);
+                                fgetc(stdin); // Clear the newline character from the input buffer
+                                switch(event_choice)
+                                {
+                                    case 1:
+                                        // Add event
+                                        event = fopen("event.txt","a");
+                                        if(event == NULL){
+                                            printf("list is empty");
+                                        }
+                                        else{
+                                            printf("\nEnter event name: ");
+                                            takeinput(ev.eventName);
+                                            printf("Enter event date (DD/MM/YYYY): ");
+                                            takeinput(ev.eventDate);
+                                            printf("Enter event time (HH:MM): ");
+                                            takeinput(ev.eventTime);
+                                            printf("Enter event location: ");
+                                            takeinput(ev.eventLocation);
+
+                                            fprintf(event, "Event Name: %s\n", ev.eventName);
+                                            fprintf(event, "Event Date: %s\n", ev.eventDate);
+                                            fprintf(event, "Event Time: %s\n", ev.eventTime);
+                                            fprintf(event, "Event Location: %s\n", ev.eventLocation);
+                                            fprintf(event, "-----------------------------\n");
+                                            
+                                            fclose(event);
+                                            printf("Event added successfully!\n");  
+
+                                        }
+                                        break;
+
+                                    case 2:
+                                        // View events
+                                        event = fopen("event.txt","r");
+                                        if(event == NULL){
+                                            printf("No events found.\n");
+                                        }
+                                        else{
+                                            char line[256];
+                                            while(fgets(line, sizeof(line), event)){
+                                                printf("%s", line);
+                                            }
+                                            fclose(event);
+                                        }
+                                        break;
+
+                                    case 3:
+                                        printf("Log out\n");
+                                        exit(0);
+
+                                    default:
+                                        printf("Invalid choice!\n");
+                                }
+                                
                             }
                             else
                             {
@@ -217,13 +359,13 @@ int main()
         }while(admin_choice != 3);
          break;
 
-        case 2:
+        case 2://for user
         
 
         do
         {
         printf("\n\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n");
-        printf("Main Menu");
+        printf("User Menu");
         printf("\n1.Register");
         printf("\n2.Login");
         printf("\n3.Exit\n");
@@ -234,7 +376,9 @@ int main()
 
         switch(user_choice)
         {
-        case 1:
+        case 1://user register
+            system("cls"); // Clear the console for better user experience
+            printf("\n\t\t\t-------- User Registration --------\n");
             printf("Enter your full name:\t");
             takeinput(user.fullName);
             printf("Enter your Email:\t");
@@ -281,7 +425,7 @@ int main()
             }
             break;
 
-        case 2:
+        case 2://user login
             printf("\n\t\t\t-------- Login --------\n");
             printf("\nEnter your username:\t");
             takeinput(username);
@@ -302,6 +446,50 @@ int main()
                         if (!strcmp(usr.password, pass))
                         {
                             printf("\nWelcome %s!\n", usr.fullName);
+                            //selectted choice
+                            
+                            printf("1. View events\n");
+                            printf("2. Book an event\n");
+                            printf("3. Cancel a booking\n");
+                            printf("4. Booking history\n");
+                            printf("5. Log out\n");
+                            printf("Enter your choice: ");
+                            int event_choice;
+                            scanf("%d", &event_choice); 
+
+                            switch(event_choice)
+                            {
+                                //user freature
+                                case 1:
+                                event = fopen("event.txt","r");
+                                        if(event == NULL){
+                                            printf("No events found.\n");
+                                        }
+                                        else{
+                                            char line[256];
+                                            while(fgets(line, sizeof(line), event)){
+                                                printf("%s", line);
+                                            }
+                                            fclose(event);
+
+                                        }
+                                break;
+
+                                case 2:
+                                system("cls"); // Clear the console for better user experience
+                                printf("Booking an event...\n");
+                                booking_event();
+
+                                break;
+
+                                case 3:
+                                break;
+
+                                case 4:
+                                break;
+
+                            }
+                            
                         }
                         else
                         {

@@ -211,6 +211,84 @@ void cancel_booking()
         printf("Booking not found.\n");
 }
 
+void booking_history()
+{
+    FILE *fp = fopen("booking.txt", "r");
+    if (fp == NULL)
+    {
+        printf("No bookings found.\n");
+        return;
+    }
+
+    char line[512];
+    printf("\n\t\t\t-------- Booking History --------\n");
+    printf("Your Booking History:\n");
+
+    while (fgets(line, sizeof(line), fp))
+    {
+        printf("%s", line);
+    }
+
+    fclose(fp);
+}
+
+// edit event function
+void edit_event()
+{
+    char search_name[100], line[256];
+    int found = 0;
+    printf("Enter the event name to edit: ");
+    takeinput(search_name);
+
+    FILE *fp = fopen("event.txt", "r");
+    FILE *temp = fopen("temp_event.txt", "w");
+    if (fp == NULL || temp == NULL) {
+        printf("Error opening file.\n");
+        if(fp) fclose(fp);
+        if(temp) fclose(temp);
+        return;
+    }
+
+    while (fgets(line, sizeof(line), fp)) {
+        if (strstr(line, "Event Name:") != NULL && strstr(line, search_name) != NULL) {
+            found = 1;
+            struct event ev;
+            printf("\n\t\t\t-------- Edit Event --------\n");
+            printf("Editing event: %s", line);
+            printf("Enter new event name: ");
+            takeinput(ev.eventName);
+            printf("Enter new event date (DD/MM/YYYY): ");
+            takeinput(ev.eventDate);
+            printf("Enter new event time (HH:MM): ");
+            takeinput(ev.eventTime);
+            printf("Enter new event location: ");
+            takeinput(ev.eventLocation);
+
+            fprintf(temp, "Event Name: %s\n", ev.eventName);
+            fprintf(temp, "Event Date: %s\n", ev.eventDate);
+            fprintf(temp, "Event Time: %s\n", ev.eventTime);
+            fprintf(temp, "Event Location: %s\n", ev.eventLocation);
+            fprintf(temp, "-----------------------------\n");
+
+            // Skip the next 4 lines (old event details)
+            for(int i=0; i<4; i++) fgets(line, sizeof(line), fp);
+        } else {
+            fputs(line, temp);
+        }
+    }
+
+    fclose(fp);
+    fclose(temp);
+
+    remove("event.txt");
+    rename("temp_event.txt", "event.txt");
+
+    if (found)
+        printf("Event updated successfully!\n");
+    else
+        printf("Event not found.\n");
+}
+
 
 int main()
 {
@@ -339,11 +417,13 @@ int main()
                                 // add event
                                 printf("1. Adding an event...\n");
                                 printf("2. View events\n");
-                                printf("3. Log out\n");
+                                printf("3. Edit event\n");
+                                printf("4. View booking history\n");
+                                printf("5. Log out\n");
                                 printf("Enter your choice: ");
                                 int event_choice;
                                 scanf("%d", &event_choice);
-                                fgetc(stdin); // Clear the newline character from the input buffer
+                                while (getchar() != '\n'); // Clear the newline character from the input buffer
                                 switch(event_choice)
                                 {
                                     case 1:
@@ -388,8 +468,17 @@ int main()
                                             fclose(event);
                                         }
                                         break;
-
                                     case 3:
+                                        // Edit event
+                                        edit_event();
+                                        break;
+                                    
+                                    case 4:
+                                        // View booking history
+                                        booking_history();
+                                        break;
+
+                                    case 5:
                                         printf("Log out\n");
                                         exit(0);
 
@@ -548,7 +637,6 @@ int main()
 
                                 case 2:
                                 system("cls"); // Clear the console for better user experience
-                                printf("Booking an event...\n");
                                 booking_event();
 
                                 break;
@@ -559,6 +647,8 @@ int main()
                                 break;
 
                                 case 4:
+                                system("cls"); // Clear the console for better user experience
+                                booking_history();
                                 break;
 
                                 case 5:

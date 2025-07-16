@@ -96,8 +96,7 @@ void booking_event()
     struct user user;
     
     printf("\n\t\t\t-------- Booking Event --------\n");
-    printf("\nPlease select an event to book:\n");
-
+    printf("\nPlease select an event to book:\n"); 
 
     printf("Available Events:\n");
     while (fgets(line, sizeof(line), event))
@@ -127,19 +126,89 @@ void booking_event()
         printf("Invalid selection.\n");
         return;
     }
-
-    printf("You selected: %s\n", events[choice - 1]);
+    FILE *fp = fopen("booking.txt","a");
+    if (fp == NULL)
+    {
+        printf("Error opening booking file.\n");
+        return;
+    }
+    else{
+        printf("You selected: %s\n", events[choice - 1]);
     
-    printf("Enter your full name:\t");
-    takeinput(user.fullName);
-    printf("Enter your Email:\t");
-    takeinput(user.email);
-    printf("Enter your contact:\t");
-    takeinput(user.phone);
-    printf("Booking confirmed for event: %s\n", events[choice - 1]);
-    printf("Thank you for booking!\n");
+        printf("Enter your full name:\t");
+        takeinput(user.fullName);
+        printf("Enter your Email:\t");
+        takeinput(user.email);
+        printf("Enter your contact:\t");
+        takeinput(user.phone);
+        printf("Booking confirmed for event: %s\n", events[choice - 1]);
+        fprintf(fp, "%s,%s,%s,%s\n", user.fullName, user.email, user.phone, events[choice - 1]);
+        fclose(fp);
+    }
+    
+    printf("Thank you for booking!\n\n");
 
     // Here you can add booking logic, e.g., save booking info to a file
+}
+
+void cancel_booking()
+{
+    char email[50], event_name[256], line[512];
+    int found = 0;
+
+    FILE *fp = fopen("booking.txt", "r");
+    if (fp == NULL)
+    {
+        printf("No bookings found.\n");
+        return;
+    }
+
+    FILE *temp = fopen("temp.txt", "w");
+    if (temp == NULL)
+    {
+        printf("Error opening temp file.\n");
+        fclose(fp);
+        return;
+    }
+
+    printf("\n\t\t\t-------- Cancel Booking --------\n");
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF); //  clear buffer once before next input
+    
+    printf("Enter your email: ");
+    takeinput(email);
+
+    printf("Enter the event name to cancel: ");
+    takeinput(event_name);
+
+    while (fgets(line, sizeof(line), fp))
+    {
+        char name[100], mail[100], phone[100], event[256];
+        // Tokenize the line assuming format: name,email,phone,Event Name:
+        sscanf(line, "%[^,],%[^,],%[^,],%[^\n]", name, mail, phone, event);
+        // Remove trailing newline from event if present
+        event[strcspn(event, "\n")] = 0;
+        // debugging output
+        // printf("Checking booking: %s, %s, %s, %s\n", name, mail, phone, event);
+        if (strcmp(mail, email) == 0 && strstr(event, event_name) != NULL)
+        {
+            found = 1; // Skip this line (i.e., cancel this booking)
+            continue;
+        }
+
+        fputs(line, temp); // Keep this booking
+    }
+
+    fclose(fp);
+    fclose(temp);
+
+    remove("booking.txt");
+    rename("temp.txt", "booking.txt");
+
+    if (found)
+        printf("Booking cancelled successfully.\n");
+    else
+        printf("Booking not found.\n");
 }
 
 
@@ -361,7 +430,7 @@ int main()
 
         case 2://for user
         
-
+        system("cls"); // Clear the console for better user experience
         do
         {
         printf("\n\t \t \t--------Welcome to Even Mangment System--------\t \t \t \t \n");
@@ -448,6 +517,8 @@ int main()
                             printf("\nWelcome %s!\n", usr.fullName);
                             //selectted choice
                             
+                            int user_choice;
+                            do {
                             printf("1. View events\n");
                             printf("2. Book an event\n");
                             printf("3. Cancel a booking\n");
@@ -483,12 +554,24 @@ int main()
                                 break;
 
                                 case 3:
+                                system("cls"); // Clear the console for better user experience
+                                cancel_booking();
                                 break;
 
                                 case 4:
                                 break;
 
+                                case 5:
+                                printf("Logging out...\n");
+                                exit(0);
+                                break;
+
+                                default:
+                                printf("Invalid choice!\n");
+
                             }
+
+                            }while(user_choice != 5);
                             
                         }
                         else

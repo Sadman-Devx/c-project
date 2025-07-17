@@ -584,6 +584,7 @@ int main()
             break;
 
         case 2://user login
+            system("cls"); // Clear the console for better user experience
             printf("\n\t\t\t-------- Login --------\n");
             printf("\nEnter your username:\t");
             takeinput(username);
@@ -621,6 +622,8 @@ int main()
                             {
                                 //user freature
                                 case 1:
+                                system("cls"); // Clear the console for better user experience
+                                printf("\n\t\t\t-------- View Events --------\n");
                                 event = fopen("event.txt","r");
                                         if(event == NULL){
                                             printf("No events found.\n");

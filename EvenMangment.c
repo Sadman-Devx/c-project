@@ -289,6 +289,47 @@ void edit_event()
         printf("Event not found.\n");
 }
 
+void Feedback()
+{
+    char feedback[500];
+    printf("\n\t\t\t-------- Feedback --------\n");
+    printf("Please provide your feedback:\n");
+    takeinput(feedback);
+
+    FILE *fp = fopen("feedback.txt", "a");
+    if (fp == NULL)
+    {
+        printf("Error opening feedback file.\n");
+        return;
+    }
+    
+    fprintf(fp, "%s\n", feedback);
+    fclose(fp);
+    
+    printf("Thank you for your feedback!\n");
+}
+
+void view_feedback()
+{
+    FILE *fp = fopen("feedback.txt", "r");
+    if (fp == NULL)
+    {
+        printf("No feedback found.\n");
+        return;
+    }
+
+    char line[500];
+    printf("\n\t\t\t-------- Feedback --------\n");
+    printf("Feedback from users:\n");
+
+    while (fgets(line, sizeof(line), fp))
+    {
+        printf("%s", line);
+    }
+
+    fclose(fp);
+}
+
 
 int main()
 {
@@ -419,6 +460,7 @@ int main()
                                 printf("2. View events\n");
                                 printf("3. Edit event\n");
                                 printf("4. View booking history\n");
+                                printf("5. View feedback\n");
                                 printf("5. Log out\n");
                                 printf("Enter your choice: ");
                                 int event_choice;
@@ -479,6 +521,11 @@ int main()
                                         break;
 
                                     case 5:
+                                        // View feedback
+                                        view_feedback();
+                                        break;
+
+                                    case 6:
                                         printf("Log out\n");
                                         exit(0);
 
@@ -613,7 +660,8 @@ int main()
                             printf("2. Book an event\n");
                             printf("3. Cancel a booking\n");
                             printf("4. Booking history\n");
-                            printf("5. Log out\n");
+                            printf("5. Feedback\n");
+                            printf("6. Log out\n");
                             printf("Enter your choice: ");
                             int event_choice;
                             scanf("%d", &event_choice); 
@@ -655,6 +703,11 @@ int main()
                                 break;
 
                                 case 5:
+                                system("cls"); // Clear the console for better user experience
+                                Feedback();
+                                break;
+
+                                case 6:
                                 printf("Logging out...\n");
                                 exit(0);
                                 break;
@@ -664,7 +717,7 @@ int main()
 
                             }
 
-                            }while(user_choice != 5);
+                            }while(user_choice != 6);
                             
                         }
                         else

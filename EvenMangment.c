@@ -456,20 +456,25 @@ int main()
                             {
                                 printf("\nWelcome %s!\n", admin.fullName);
                                 // add event
-                                printf("1. Adding an event...\n");
+                                int event_choice;
+                                do
+                                {
+                                printf("1. \nAdding an event...\n");
                                 printf("2. View events\n");
                                 printf("3. Edit event\n");
                                 printf("4. View booking history\n");
                                 printf("5. View feedback\n");
-                                printf("5. Log out\n");
+                                printf("6. Log out\n");
                                 printf("Enter your choice: ");
-                                int event_choice;
+
                                 scanf("%d", &event_choice);
                                 while (getchar() != '\n'); // Clear the newline character from the input buffer
                                 switch(event_choice)
                                 {
                                     case 1:
                                         // Add event
+                                        system("cls"); // Clear the console for better user experience
+                                        printf("\n\t\t\t-------- Add Event --------\n");
                                         event = fopen("event.txt","a");
                                         if(event == NULL){
                                             printf("list is empty");
@@ -498,6 +503,8 @@ int main()
 
                                     case 2:
                                         // View events
+                                        system("cls"); // Clear the console for better user experience
+                                        printf("\n\t\t\t-------- View Events --------\n");
                                         event = fopen("event.txt","r");
                                         if(event == NULL){
                                             printf("No events found.\n");
@@ -512,16 +519,19 @@ int main()
                                         break;
                                     case 3:
                                         // Edit event
+                                        system("cls"); // Clear the console for better user experience
                                         edit_event();
                                         break;
                                     
                                     case 4:
                                         // View booking history
+                                        system("cls"); // Clear the console for better user experience
                                         booking_history();
                                         break;
 
                                     case 5:
                                         // View feedback
+                                        system("cls"); // Clear the console for better user experience
                                         view_feedback();
                                         break;
 
@@ -532,6 +542,7 @@ int main()
                                     default:
                                         printf("Invalid choice!\n");
                                 }
+                              } while(event_choice != 6);
                                 
                             }
                             else

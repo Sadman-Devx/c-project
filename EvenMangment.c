@@ -454,12 +454,13 @@ int main()
                             admin_found = 1;  // Moved here
                             if (!strcmp(admin.password, admin_pass))
                             {
-                                printf("\nWelcome %s!\n", admin.fullName);
+                                printf("\n\t\t\t-------- Admin Dashboard --------\n");
+                                printf("\n\t\t\tWelcome %s!\n", admin.fullName);
                                 // add event
                                 int event_choice;
                                 do
                                 {
-                                printf("1. \nAdding an event...\n");
+                                printf("1. Adding an event...\n");
                                 printf("2. View events\n");
                                 printf("3. Edit event\n");
                                 printf("4. View booking history\n");
@@ -662,7 +663,8 @@ int main()
                         usrFound = 1;  // Moved here
                         if (!strcmp(usr.password, pass))
                         {
-                            printf("\nWelcome %s!\n", usr.fullName);
+                            printf("\n\t\t\t-------- User Dashboard --------\n");
+                            printf("\n\t\t\tWelcome %s!\n", usr.fullName);
                             //selectted choice
                             
                             int user_choice;

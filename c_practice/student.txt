@@ -1,0 +1,6 @@
+Name		Age	Phone Number
+--------	---	------------
+
+abdullah		23	1885080099
+
+abdullah                22      1885080099

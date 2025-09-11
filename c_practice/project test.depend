@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1745924783 source:d:\shakib\c\project\project test\main.c
+	<stdio.h>
+	"info.h"
+
+1745924810 d:\shakib\c\project\project test\info.h
+
